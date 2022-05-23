@@ -1,30 +1,79 @@
 ---
 title: "index.Rmd"
 author: "Mike Deng"
-date: "`r Sys.Date()`"
+date: "`2022-05-21`"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyverse))
+suppressMessages(library(data.table))
+suppressMessages(library(ggplot2))
+suppressMessages(library(hrbrthemes))
+suppressMessages(library(geojsonio))
+suppressMessages(library(RColorBrewer))
+suppressMessages(library(rgdal))
+suppressMessages(library(broom))
+suppressMessages(library(rgeos))
 ```
 
-## R Markdown
+# A report about incarceration in the Washington state using the *incarceration_trends.csv in* [this GitHub repository](https://github.com/vera-institute/incarceration-trends).
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Introduction:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Incarceration is a major topic in the United States (U.S.). Using the *incarceration_trends.csv in* [this GitHub repository](https://github.com/vera-institute/incarceration-trends) can help us visualize the current incarceration issue in the U.S. as it contains substantial information about the incarceration in the U.S. from 1970 to 2018. To analyse this data with more detail, I would examine how does race act as a factor in the incarceration. In our data ethic lecture we have crossed similar topics in which the machine learning tool in the past had mistakenly rated African Americans with higher risk compared to other race Americans without evidence. Eventually, in this report, I will examine the race factor with respect to incarceration in the U.S. state and conclude my observations below.
 
-```{r cars}
-summary(cars)
+```{r echo = FALSE}
+library(knitr)
+source("analysis.R")
 ```
 
-## Including Plots
+There are some questions in which I hope to answer in my summary information section:
 
-You can also embed plots, for example:
+-   How many rows and columns are in this data-set?
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+-   Which area has the highest jail population?
+
+-   Which urbanisity has the highest jail population?
+
+-   How many people are in jail over the years?
+
+-   How many African Americans are in jail over the years in the U.S.?
+
+-   How many white people are in jail over the years in the U.S.?
+
+-   How many Latino Americans are in jail over the years in the U.S.?
+
+-   How many Asian Americans are in jail over the years in the U.S.?
+
+## Summary Information:
+
+To further calculate how does race act as a factor to affect the incarceration in the U.S., I have used analytical and DPLYR skills to calculate important summary values that I think is relevant to my exploration. There are `r summary_info$num_observations` rows and `r summary_info$num_types` columns in the dataset. The area with highest jail population is `r summary_info$area_with_highest_jail_po`. The urbanicity with highest jail population is `r summary_info$urbanicity_with_highest_jail_po`. The total population that goes to jail over the years is `r summary_info$total_pop_jail`, the total black population in jail over the years is `r summary_info$black_pop_jail`. To compared with other races, the total white population in jail is `r summary_info$white_pop_jail`, the total latinx population in jail over the years is `r summary_info$latinx_pop_jail`, and the total asian population in jail over the years is `r summary_info$aapi_pop_jail`. Observing those data, we can see that the highest population that goes to jail by race would be white.
+
+## Trends over time chart:
+
+For trends over the time chart, I want to know how does the population of different races increase in jail as time goes on. By using a scatter plot, we can easily visualize how does population of different races increase in jail. The graph is generated below.
+
+```{r echo = FALSE}
+suppressWarnings(print(time_chart))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Note we can see that the black and white population in jail are similar, whereas the latino and asian population are the latter two.
+
+## Variable comparison chart
+
+I did a scatter line plot between 2 variables, and the purpose of this chart is to show the black population in jail and the black population to compare about the black population in jail and not in jail. One important observation I can derive from this chart is that even though the population is increasing drastically, but the population in jail only increase a little bit relatively. Therefore, one can reasonablly conclude that only a little out of the black population are in jail.
+
+```{r echo = FALSE}
+suppressWarnings(print(vari_chart))
+```
+
+## Map
+
+The purpose of this chart is to show the black population density in jail in 2017 as the year has enough data to perform this chart. The lighter the blue the more black population in jail. So we can see that the Mideast region has the highest black population in jail. Whereas some of the states in the shape of hexagon do not have black jail population, thus it is making the color of gray. Note: I have used code from [here](https://r-graph-gallery.com/328-hexbin-map-of-the-usa.html) for making the chart below.
+
+```{r echo = FALSE}
+suppressWarnings(print(map_final))
+```
